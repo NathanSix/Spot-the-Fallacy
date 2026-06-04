@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Spot the Fallacy</title>
+
+  <!-- Add-to-Home-Screen (iOS) -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Fallacy" />
+  <meta name="theme-color" content="#E63946" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><rect width='180' height='180' fill='%23F5F0E8'/><rect x='6' y='6' width='168' height='168' fill='none' stroke='%23111' stroke-width='8'/><text x='90' y='90' font-size='96' text-anchor='middle' dominant-baseline='central'>🎯</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><rect width='180' height='180' fill='%23F5F0E8'/><rect x='6' y='6' width='168' height='168' fill='none' stroke='%23111' stroke-width='8'/><text x='90' y='90' font-size='96' text-anchor='middle' dominant-baseline='central'>🎯</text></svg>" />
+
+  <style>
+    html, body { margin: 0; padding: 0; background: #F5F0E8; }
+    * { -webkit-tap-highlight-color: transparent; }
+    #loading {
+      font-family: -apple-system, system-ui, sans-serif;
+      text-align: center; padding: 80px 20px; color: #888;
+    }
+  </style>
+
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"><div id="loading">Loading Spot the Fallacy…</div></div>
+
+  <script type="text/babel" data-presets="react">
+    const { useState, useEffect, useMemo, useCallback, memo } = React;
+
+const FONT_HREF =
+  "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap";
+
+function useGoogleFonts() {
+  useEffect(() => {
+    if (document.querySelector(`link[href="${FONT_HREF}"]`)) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = FONT_HREF;
+    document.head.appendChild(link);
+  }, []);
+}
+
+/* ─── DATA: the fallacy deck ─── */
+const FALLACIES = [
+  {
+    id: "strawman",
+    name: "Straw Man",
+    cat: "Distraction",
+    tagline: "Attacking an argument nobody made.",
+    what: "Misrepresenting someone's position to make it easier to knock down. You refute a distorted, exaggerated version of their argument instead of the real one.",
+    example: "“You want better train funding? So you think we should just pour endless money into trains and let every road in the country crumble.”",
+    why: "It feels like a win because the absurd version is easy to defeat — but the actual claim was never addressed. Audiences mistake the demolition of the fake argument for a rebuttal of the real one.",
+    spot: "Ask: 'Is that really what they said?' If the version being attacked sounds far more extreme or stupid than the original, you're looking at a straw man.",
+  },
+  {
+    id: "adhominem",
+    name: "Ad Hominem",
+    cat: "Distraction",
+    tagline: "Attacking the person, not the point.",
+    what: "Rejecting an argument by attacking the character, motive, or traits of the person making it, rather than engaging with the argument itself.",
+    example: "“Why should we listen to her ideas on tax policy? She's never even run a business.”",
+    why: "Personal flaws are emotionally vivid and easy to latch onto. But whether a claim is true doesn't depend on who says it — even unpleasant or unqualified people can be right.",
+    spot: "Check whether the response engages the claim or just the claimant. If you removed the insult, would any actual counterargument remain?",
+  },
+  {
+    id: "falsedilemma",
+    name: "False Dilemma",
+    cat: "Structure",
+    tagline: "Only two options — when there are more.",
+    what: "Presenting a situation as having only two possible outcomes when in fact other alternatives exist. Also called the either/or fallacy or black-and-white thinking.",
+    example: "“Either we ban the app entirely, or we accept that our kids' data will be stolen. There's no middle ground.”",
+    why: "It forces a choice by hiding the spectrum of real options. Cornered into picking between two extremes, people accept one without noticing the third, fourth, or fifth path.",
+    spot: "Ask: 'Are these really the only choices?' Look for the compromise, the hybrid, or the 'none of the above' the speaker conveniently omitted.",
+  },
+  {
+    id: "slipperyslope",
+    name: "Slippery Slope",
+    cat: "Structure",
+    tagline: "One step leads inevitably to disaster.",
+    what: "Asserting that a relatively small first step will unavoidably lead to a chain of related (usually catastrophic) events, without justifying why each link must follow.",
+    example: "“If we let students redo one test, soon they'll expect to redo everything, and eventually grades will mean nothing at all.”",
+    why: "The imagined endpoint is scary, and fear short-circuits scrutiny of the chain. But each 'inevitable' step usually needs its own evidence — and rarely gets it.",
+    spot: "Examine each link in the chain. Is every step actually guaranteed, or are 'could' and 'might' quietly doing the work of 'will'?",
+  },
+  {
+    id: "circular",
+    name: "Circular Reasoning",
+    cat: "Structure",
+    tagline: "The conclusion is the evidence.",
+    what: "An argument where the conclusion is assumed within one of its premises. The reasoning goes in a circle: A is true because of B, and B is true because of A. Also called begging the question.",
+    example: "“This book is the most trustworthy source on the subject — because it says so right here in the introduction.”",
+    why: "It can sound authoritative because it repeats itself confidently. But it never offers independent support; it just restates the claim in different words.",
+    spot: "Try to trace the support. If the reason for believing the conclusion turns out to BE the conclusion, the circle is closed and nothing was proven.",
+  },
+  {
+    id: "appealauthority",
+    name: "Appeal to Authority",
+    cat: "Relevance",
+    tagline: "True because someone important said so.",
+    what: "Claiming something must be true simply because an authority or celebrity endorses it — especially when that authority isn't an expert in the relevant field.",
+    example: "“A famous actor with millions of followers says this supplement cures colds, so it must work.”",
+    why: "We're wired to trust authority and status. But expertise doesn't transfer between fields, and even real experts can be wrong or biased. Endorsement isn't evidence.",
+    spot: "Ask two things: Is this person actually an expert in THIS topic? And is there real evidence behind the claim, or just the endorsement?",
+  },
+  {
+    id: "bandwagon",
+    name: "Bandwagon",
+    cat: "Relevance",
+    tagline: "True because everyone believes it.",
+    what: "Arguing that a claim is correct, or an action is right, simply because many people believe it or do it. Popularity is treated as proof. Also called appeal to popularity.",
+    example: "“Millions of people can't be wrong — if everyone's investing in this, it must be a smart move.”",
+    why: "Belonging feels safe, and going against the crowd feels risky. But popularity tracks what's appealing or trendy, not what's true. Whole crowds have been wrong before.",
+    spot: "Separate 'popular' from 'correct.' Ask whether there's any evidence beyond the number of believers. Fashions and facts are different things.",
+  },
+  {
+    id: "appealemotion",
+    name: "Appeal to Emotion",
+    cat: "Relevance",
+    tagline: "Feelings used in place of reasons.",
+    what: "Manipulating an emotional response — fear, pity, anger, pride — in place of presenting a valid argument. The feeling is meant to substitute for evidence.",
+    example: "“How could you possibly oppose this policy? Think of the children who would be heartbroken.”",
+    why: "Strong emotions hijack careful thought. When you feel fear or sympathy intensely, you're far less likely to ask whether the underlying claim actually holds up.",
+    spot: "Notice when a message works hard to make you FEEL something. Then ask: underneath the emotion, what's the actual argument — and does it stand on its own?",
+  },
+  {
+    id: "hastygeneralization",
+    name: "Hasty Generalization",
+    cat: "Evidence",
+    tagline: "A big conclusion from tiny evidence.",
+    what: "Drawing a broad conclusion from a sample that's too small, biased, or unrepresentative to support it.",
+    example: "“I met two rude people from that city, so everyone who lives there must be unfriendly.”",
+    why: "Our brains love patterns and form them fast, often from just one or two memorable cases. But a handful of examples rarely represents the whole.",
+    spot: "Ask: 'How much evidence is this really based on?' One anecdote or a tiny sample can't support a sweeping claim about an entire group.",
+  },
+  {
+    id: "posthoc",
+    name: "Post Hoc",
+    cat: "Evidence",
+    tagline: "It happened after, so it was caused by.",
+    what: "Assuming that because one event followed another, the first must have caused the second. Confuses correlation and sequence with causation. Full name: post hoc ergo propter hoc.",
+    example: "“I wore my lucky socks and we won the game — those socks clearly made the difference.”",
+    why: "Sequence in time looks like cause, and our minds crave explanations. But two things happening one after another can be coincidence, or both caused by some third factor.",
+    spot: "Ask: 'Is there an actual mechanism here, or just timing?' Could it be coincidence, or could something else explain both events?",
+  },
+  {
+    id: "redherring",
+    name: "Red Herring",
+    cat: "Distraction",
+    tagline: "Changing the subject to dodge it.",
+    what: "Introducing an irrelevant topic to divert attention away from the original issue, so the real question is never actually answered.",
+    example: "“You're asking about my missed deadlines? Well, what about how the whole industry is struggling right now?”",
+    why: "The new topic is often interesting or provocative enough to pull focus. By the time everyone's debating it, the original uncomfortable question has quietly vanished.",
+    spot: "Keep the original question in view. Ask: 'Does this response actually address what was asked, or did we just get steered somewhere else?'",
+  },
+  {
+    id: "tuquoque",
+    name: "Tu Quoque",
+    cat: "Distraction",
+    tagline: "“You do it too!” as a defense.",
+    what: "Deflecting criticism by accusing the critic of hypocrisy, rather than addressing the criticism itself. A specific form of ad hominem. Literally 'you also.'",
+    example: "“You're telling me to quit smoking? I've seen you light up plenty of times yourself.”",
+    why: "Pointing out hypocrisy feels like a fair counterstrike. But the critic's behavior has no bearing on whether their point is correct — a hypocrite can still be right.",
+    spot: "Separate the messenger from the message. Even if the critic IS a hypocrite, ask whether the original criticism is still valid on its own merits.",
+  },
+];
+
+const CATEGORIES = ["All", "Distraction", "Structure", "Relevance", "Evidence"];
+
+const catAccent = {
+  Distraction: "#E63946",
+  Structure: "#4361EE",
+  Relevance: "#F4A300",
+  Evidence: "#2EC4B6",
+};
+const catEmoji = {
+  Distraction: "🎭",
+  Structure: "🏗️",
+  Relevance: "🎯",
+  Evidence: "🔬",
+};
+
+/* ─── QUIZ: scenarios → which fallacy? ─── */
+const QUIZ = [
+  {
+    scenario: "“Of course the new mayor's housing plan is garbage. Have you seen the ridiculous way he dresses?”",
+    answer: "adhominem",
+    note: "His clothing has nothing to do with whether the housing plan works. The attack targets the person, not the policy.",
+  },
+  {
+    scenario: "“We either cancel the entire festival or we accept that someone is going to get hurt. Pick one.”",
+    answer: "falsedilemma",
+    note: "Extra security, capacity limits, and safety measures are all options being hidden behind a forced two-way choice.",
+  },
+  {
+    scenario: "“Four out of five of my friends loved that movie, so it's obviously a cinematic masterpiece for everyone.”",
+    answer: "hastygeneralization",
+    note: "Five friends is far too small and unrepresentative a sample to support a claim about a film's universal quality.",
+  },
+  {
+    scenario: "“Right after the new coach arrived, the team started winning. He's clearly the reason for the turnaround.”",
+    answer: "posthoc",
+    note: "The wins came after the coach — but timing isn't proof of cause. New players, easier opponents, or luck could explain it.",
+  },
+  {
+    scenario: "“You can trust everything on this website. How do we know? Because it's listed as a reliable site — on the website itself.”",
+    answer: "circular",
+    note: "The conclusion (it's trustworthy) is used as its own evidence. The reasoning loops back on itself.",
+  },
+  {
+    scenario: "“If we allow one food truck downtown, before long there'll be hundreds and no real restaurants will survive at all.”",
+    answer: "slipperyslope",
+    note: "Each step from 'one truck' to 'restaurant apocalypse' is asserted as inevitable without any justification.",
+  },
+  {
+    scenario: "“My opponent wants to review the defense budget — in other words, he wants to leave us totally defenseless against our enemies.”",
+    answer: "strawman",
+    note: "'Review the budget' has been twisted into 'abolish all defense' — a distorted version that's easier to attack.",
+  },
+  {
+    scenario: "“A world-famous physicist endorsed this brand of vitamins, so they're guaranteed to keep you healthy.”",
+    answer: "appealauthority",
+    note: "Physics expertise doesn't transfer to nutrition, and an endorsement isn't the same as evidence the vitamins work.",
+  },
+  {
+    scenario: "“You criticize me for being late, but you were ten minutes late to this very meeting!”",
+    answer: "tuquoque",
+    note: "Pointing out the critic's own lateness doesn't address whether the original criticism was fair.",
+  },
+  {
+    scenario: "“Reporter: Did the company dump waste in the river? Spokesperson: What we should really be talking about is how many jobs we create.”",
+    answer: "redherring",
+    note: "Jobs are a separate topic introduced to steer attention away from the actual question about pollution.",
+  },
+];
+
+/* Built once: id → fallacy object, and a reusable [0,1,2,…] index array. */
+const FALLACY_BY_ID = Object.fromEntries(FALLACIES.map((f) => [f.id, f]));
+const QUIZ_INDICES = QUIZ.map((_, i) => i);
+
+function FallacyApp() {
+  useGoogleFonts();
+  const [mode, setMode] = useState("learn"); // 'learn' | 'quiz'
+
+  return (
+    <div style={s.root}>
+      <Header mode={mode} setMode={setMode} />
+      {mode === "learn" ? <LearnMode /> : <QuizMode />}
+      <footer style={s.footer}>
+        {FALLACIES.length} fallacies · Learn to spot them, then test yourself
+      </footer>
+    </div>
+  );
+}
+
+function Header({ mode, setMode }) {
+  return (
+    <header style={s.header}>
+      <div style={s.headerInner}>
+        <div>
+          <div style={s.titleTag}>CRITICAL THINKING TOOLKIT</div>
+          <h1 style={s.title}>SPOT THE<br />FALLACY</h1>
+          <p style={s.subtitle}>Learn the tricks bad arguments play — and catch them in the wild</p>
+        </div>
+        <div style={s.modeSwitch}>
+          <button
+            style={{ ...s.modeBtn, ...(mode === "learn" ? s.modeBtnActive : {}) }}
+            onClick={() => setMode("learn")}
+          >
+            📖 LEARN
+          </button>
+          <button
+            style={{ ...s.modeBtn, ...(mode === "quiz" ? s.modeBtnActiveRed : {}) }}
+            onClick={() => setMode("quiz")}
+          >
+            🎯 QUIZ
+          </button>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+/* ─── LEARN MODE ─── */
+function LearnMode() {
+  const [cat, setCat] = useState("All");
+  const [search, setSearch] = useState("");
+  const [openId, setOpenId] = useState(null);
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return FALLACIES.filter((f) => {
+      if (cat !== "All" && f.cat !== cat) return false;
+      if (!q) return true;
+      return (
+        f.name.toLowerCase().includes(q) ||
+        f.tagline.toLowerCase().includes(q) ||
+        f.what.toLowerCase().includes(q)
+      );
+    });
+  }, [cat, search]);
+
+  const toggle = useCallback(
+    (id) => setOpenId((p) => (p === id ? null : id)),
+    []
+  );
+
+  return (
+    <>
+      <div style={s.controls}>
+        <div style={s.searchWrap}>
+          <span style={{ padding: "0 10px", fontSize: 15 }}>🔍</span>
+          <input
+            style={s.searchInput}
+            placeholder="Search fallacies…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          {search && <button style={s.clearBtn} onClick={() => setSearch("")}>✕</button>}
+        </div>
+        <div style={s.filterWrap}>
+          {CATEGORIES.map((c) => {
+            const active = cat === c;
+            const accent = c === "All" ? "#111" : catAccent[c];
+            return (
+              <button
+                key={c}
+                style={{ ...s.filterBtn, ...(active ? { background: accent, color: "#fff" } : {}) }}
+                onClick={() => setCat(c)}
+              >
+                {c !== "All" && catEmoji[c] + " "}
+                {c.toUpperCase()}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <main style={s.list}>
+        {filtered.length === 0 && (
+          <div style={s.empty}>
+            <div style={{ fontSize: 44, marginBottom: 10 }}>🔎</div>
+            <div style={s.emptyText}>No fallacies match.</div>
+          </div>
+        )}
+        {filtered.map((f) => (
+          <FallacyCard key={f.id} f={f} isOpen={openId === f.id} onToggle={toggle} />
+        ))}
+      </main>
+    </>
+  );
+}
+
+const FallacyCard = memo(function FallacyCard({ f, isOpen, onToggle }) {
+  const accent = catAccent[f.cat];
+  return (
+    <div style={{ ...s.card, ...(isOpen ? { boxShadow: "4px 4px 0 #111", borderTopColor: accent, borderTopWidth: 5 } : {}) }}>
+      <button style={s.cardHeader} onClick={() => onToggle(f.id)} aria-expanded={isOpen}>
+        <div style={s.cardHeaderLeft}>
+          <span style={{ ...s.pill, background: accent }}>{catEmoji[f.cat]} {f.cat.toUpperCase()}</span>
+          <div style={s.nameBlock}>
+            <span style={s.cardName}>{f.name}</span>
+            <span style={s.cardTagline}>{f.tagline}</span>
+          </div>
+        </div>
+        <span style={{ ...s.chev, transform: isOpen ? "rotate(45deg)" : "none" }}>+</span>
+      </button>
+
+      {isOpen && (
+        <div style={s.body}>
+          <Section label="WHAT IT IS" accent={accent}>{f.what}</Section>
+          <div style={{ ...s.exampleBox, borderColor: accent }}>
+            <div style={{ ...s.exampleLabel, color: accent }}>💬 IN THE WILD</div>
+            <p style={s.exampleText}>{f.example}</p>
+          </div>
+          <Section label="WHY IT FOOLS US" accent={accent}>{f.why}</Section>
+          <div style={s.spotBox}>
+            <div style={s.spotLabel}>🔍 HOW TO SPOT IT</div>
+            <p style={s.spotText}>{f.spot}</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+});
+
+function Section({ label, accent, children }) {
+  return (
+    <div style={s.section}>
+      <div style={{ ...s.sectionLabel, color: accent }}>{label}</div>
+      <p style={s.sectionText}>{children}</p>
+    </div>
+  );
+}
+
+/* ─── QUIZ MODE ─── */
+function QuizMode() {
+  const [order, setOrder] = useState(() => shuffle(QUIZ_INDICES));
+  const [idx, setIdx] = useState(0);
+  const [picked, setPicked] = useState(null);
+  const [score, setScore] = useState(0);
+  const [done, setDone] = useState(false);
+
+  const questionIndex = order[idx];
+  const q = QUIZ[questionIndex];
+
+  // four options: the correct fallacy + three distractors, shuffled.
+  // Keyed on the question's identity (not its answer) so repeats and
+  // reshuffles always recompute correctly.
+  const options = useMemo(() => {
+    const correct = q.answer;
+    const others = shuffle(
+      FALLACIES.filter((f) => f.id !== correct).map((f) => f.id)
+    ).slice(0, 3);
+    return shuffle([correct, ...others]);
+  }, [questionIndex]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const pick = (id) => {
+    if (picked) return;
+    setPicked(id);
+    if (id === q.answer) setScore((sc) => sc + 1);
+  };
+
+  const next = () => {
+    if (idx + 1 >= order.length) { setDone(true); return; }
+    setIdx((i) => i + 1);
+    setPicked(null);
+  };
+
+  const restart = () => {
+    setOrder(shuffle(QUIZ_INDICES));
+    setIdx(0); setPicked(null); setScore(0); setDone(false);
+  };
+
+  if (done) {
+    const pct = Math.round((score / QUIZ.length) * 100);
+    const verdict =
+      pct >= 90 ? "FALLACY HUNTER" :
+      pct >= 70 ? "SHARP EYE" :
+      pct >= 50 ? "GETTING THERE" : "KEEP TRAINING";
+    return (
+      <div style={s.resultWrap}>
+        <div style={s.resultCard}>
+          <div style={s.resultLabel}>QUIZ COMPLETE</div>
+          <div style={s.resultScore}>{score}<span style={s.resultTotal}>/{QUIZ.length}</span></div>
+          <div style={s.resultVerdict}>{verdict}</div>
+          <div style={s.resultBarTrack}>
+            <div style={{ ...s.resultBarFill, width: `${pct}%` }} />
+          </div>
+          <p style={s.resultPct}>{pct}% correct</p>
+          <button style={s.bigBtn} onClick={restart}>↻ PLAY AGAIN</button>
+        </div>
+      </div>
+    );
+  }
+
+  const fallacyById = (id) => FALLACY_BY_ID[id];
+  const isCorrect = picked === q.answer;
+
+  return (
+    <div style={s.quizWrap}>
+      {/* progress + score */}
+      <div style={s.quizTop}>
+        <span style={s.quizCount}>QUESTION {idx + 1} / {QUIZ.length}</span>
+        <span style={s.quizScore}>SCORE: {score}</span>
+      </div>
+      <div style={s.quizTrack}>
+        <div style={{ ...s.quizTrackFill, width: `${(idx / QUIZ.length) * 100}%` }} />
+      </div>
+
+      {/* scenario */}
+      <div style={s.scenarioBox}>
+        <div style={s.scenarioLabel}>⚠️ WHICH FALLACY IS THIS?</div>
+        <p style={s.scenarioText}>{q.scenario}</p>
+      </div>
+
+      {/* options */}
+      <div style={s.optionGrid}>
+        {options.map((id) => {
+          const f = fallacyById(id);
+          let style = { ...s.optBtn };
+          if (picked) {
+            if (id === q.answer) style = { ...style, ...s.optCorrect };
+            else if (id === picked) style = { ...style, ...s.optWrong };
+            else style = { ...style, ...s.optDimmed };
+          }
+          return (
+            <button key={id} style={style} onClick={() => pick(id)} disabled={!!picked}>
+              <span style={s.optName}>{f.name}</span>
+              {picked && id === q.answer && <span style={s.optMark}>✓</span>}
+              {picked && id === picked && id !== q.answer && <span style={s.optMark}>✕</span>}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* feedback */}
+      {picked && (
+        <div style={{ ...s.feedback, borderColor: isCorrect ? "#2a9d2a" : "#E63946" }}>
+          <div style={{ ...s.feedbackTitle, color: isCorrect ? "#2a9d2a" : "#E63946" }}>
+            {isCorrect ? "✓ CORRECT!" : `✕ IT'S ${fallacyById(q.answer).name.toUpperCase()}`}
+          </div>
+          <p style={s.feedbackText}>{q.note}</p>
+          <button style={s.nextBtn} onClick={next}>
+            {idx + 1 >= order.length ? "SEE RESULTS →" : "NEXT QUESTION →"}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ─── STYLES ─── */
+const s = {
+  root: {
+    fontFamily: "'Source Serif 4', Georgia, serif",
+    background: "#F5F0E8",
+    minHeight: "100vh",
+    color: "#111",
+  },
+
+  header: { background: "#fff", borderBottom: "3px solid #111" },
+  headerInner: {
+    maxWidth: 880, margin: "0 auto", padding: "26px 24px 22px",
+    display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 16, flexWrap: "wrap",
+  },
+  titleTag: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 11, letterSpacing: "0.2em", color: "#999" },
+  title: {
+    fontFamily: "'Bebas Neue', Impact, sans-serif",
+    fontSize: "clamp(38px, 8vw, 60px)", lineHeight: 0.92, letterSpacing: "0.03em",
+    margin: "3px 0 8px", color: "#111",
+  },
+  subtitle: { fontSize: 13, color: "#555", margin: 0, maxWidth: 420 },
+  modeSwitch: { display: "flex", gap: 0, border: "3px solid #111", flexShrink: 0 },
+  modeBtn: {
+    fontFamily: "'Bebas Neue', sans-serif", fontSize: 16, letterSpacing: "0.08em",
+    padding: "10px 18px", border: "none", background: "#fff", color: "#111", cursor: "pointer",
+    transition: "all 0.12s",
+  },
+  modeBtnActive: { background: "#4361EE", color: "#fff" },
+  modeBtnActiveRed: { background: "#E63946", color: "#fff" },
+
+  controls: { background: "#fff", borderBottom: "3px solid #111", padding: "16px 24px", position: "sticky", top: 0, zIndex: 20 },
+  searchWrap: { display: "flex", alignItems: "center", border: "2.5px solid #111", background: "#fff", marginBottom: 12, maxWidth: 880, margin: "0 auto 12px" },
+  searchInput: { flex: 1, border: "none", outline: "none", padding: "10px 0", fontSize: 15, fontFamily: "'Source Serif 4', Georgia, serif", background: "transparent", color: "#111", minWidth: 0 },
+  clearBtn: { border: "none", background: "none", padding: "0 14px", cursor: "pointer", fontSize: 14, color: "#888" },
+  filterWrap: { display: "flex", flexWrap: "wrap", gap: 6, maxWidth: 880, margin: "0 auto" },
+  filterBtn: {
+    fontFamily: "'Bebas Neue', sans-serif", fontSize: 13, letterSpacing: "0.07em",
+    padding: "5px 12px", border: "2px solid #111", background: "#fff", color: "#111", cursor: "pointer", transition: "all 0.12s",
+  },
+
+  list: { maxWidth: 880, margin: "0 auto", padding: "20px 24px 50px", display: "flex", flexDirection: "column", gap: 10 },
+  card: { background: "#fff", border: "2.5px solid #111", borderTop: "5px solid #111", transition: "box-shadow 0.15s" },
+  cardHeader: { width: "100%", background: "transparent", border: "none", padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, cursor: "pointer", textAlign: "left", fontFamily: "inherit" },
+  cardHeaderLeft: { display: "flex", alignItems: "center", gap: 12, flex: 1, minWidth: 0, flexWrap: "wrap" },
+  pill: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 10, letterSpacing: "0.08em", padding: "3px 8px", color: "#fff", whiteSpace: "nowrap", flexShrink: 0 },
+  nameBlock: { display: "flex", flexDirection: "column", gap: 1, minWidth: 0 },
+  cardName: { fontFamily: "'Bebas Neue', Impact, sans-serif", fontSize: "clamp(18px, 3vw, 24px)", letterSpacing: "0.03em", color: "#111", lineHeight: 1 },
+  cardTagline: { fontSize: 12.5, color: "#777", fontStyle: "italic" },
+  chev: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 26, color: "#111", transition: "transform 0.2s", lineHeight: 1, flexShrink: 0 },
+
+  body: { borderTop: "2px solid #111", padding: "16px 18px 18px" },
+  section: { marginBottom: 14 },
+  sectionLabel: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 12, letterSpacing: "0.14em", marginBottom: 5 },
+  sectionText: { fontSize: 14, lineHeight: 1.75, color: "#222", margin: 0 },
+
+  exampleBox: { border: "2.5px solid #111", borderLeftWidth: 6, padding: "12px 14px", margin: "0 0 14px", background: "#FBF8F2" },
+  exampleLabel: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 11, letterSpacing: "0.12em", marginBottom: 6 },
+  exampleText: { fontSize: 14.5, lineHeight: 1.6, color: "#1a1a1a", margin: 0, fontStyle: "italic" },
+
+  spotBox: { background: "#111", padding: "13px 15px", marginTop: 4 },
+  spotLabel: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 11, letterSpacing: "0.14em", color: "#F4A300", marginBottom: 6 },
+  spotText: { fontSize: 14, lineHeight: 1.7, color: "#fff", margin: 0 },
+
+  empty: { textAlign: "center", padding: "70px 20px", color: "#888" },
+  emptyText: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 22, letterSpacing: "0.08em", color: "#444" },
+
+  /* quiz */
+  quizWrap: { maxWidth: 720, margin: "0 auto", padding: "26px 24px 50px" },
+  quizTop: { display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 8 },
+  quizCount: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 15, letterSpacing: "0.1em", color: "#555" },
+  quizScore: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 16, letterSpacing: "0.08em", color: "#E63946" },
+  quizTrack: { height: 8, background: "#e3ddd1", border: "2px solid #111", marginBottom: 22, overflow: "hidden" },
+  quizTrackFill: { height: "100%", background: "#E63946", transition: "width 0.4s" },
+
+  scenarioBox: { background: "#fff", border: "3px solid #111", boxShadow: "5px 5px 0 #111", padding: "20px 22px", marginBottom: 22 },
+  scenarioLabel: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 13, letterSpacing: "0.12em", color: "#E63946", marginBottom: 10 },
+  scenarioText: { fontSize: 18, lineHeight: 1.6, color: "#111", margin: 0, fontStyle: "italic" },
+
+  optionGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 18 },
+  optBtn: {
+    fontFamily: "'Bebas Neue', sans-serif", fontSize: 17, letterSpacing: "0.04em",
+    padding: "16px 14px", border: "2.5px solid #111", background: "#fff", color: "#111", cursor: "pointer",
+    display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8,
+    transition: "all 0.12s", textAlign: "left",
+  },
+  optCorrect: { background: "#2a9d2a", color: "#fff", boxShadow: "3px 3px 0 #111" },
+  optWrong: { background: "#E63946", color: "#fff" },
+  optDimmed: { opacity: 0.4 },
+  optName: { lineHeight: 1.1 },
+  optMark: { fontSize: 20, flexShrink: 0 },
+
+  feedback: { background: "#fff", border: "3px solid #111", borderLeftWidth: 7, padding: "16px 18px" },
+  feedbackTitle: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 20, letterSpacing: "0.06em", marginBottom: 8 },
+  feedbackText: { fontSize: 14.5, lineHeight: 1.7, color: "#222", margin: "0 0 14px" },
+  nextBtn: {
+    fontFamily: "'Bebas Neue', sans-serif", fontSize: 15, letterSpacing: "0.08em",
+    padding: "10px 20px", border: "2.5px solid #111", background: "#111", color: "#fff", cursor: "pointer",
+  },
+
+  /* results */
+  resultWrap: { maxWidth: 520, margin: "0 auto", padding: "50px 24px" },
+  resultCard: { background: "#fff", border: "3px solid #111", boxShadow: "8px 8px 0 #111", padding: "40px 32px", textAlign: "center" },
+  resultLabel: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 15, letterSpacing: "0.16em", color: "#999", marginBottom: 14 },
+  resultScore: { fontFamily: "'Bebas Neue', Impact, sans-serif", fontSize: 80, lineHeight: 1, color: "#111" },
+  resultTotal: { fontSize: 40, color: "#bbb" },
+  resultVerdict: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 30, letterSpacing: "0.06em", color: "#E63946", margin: "10px 0 22px" },
+  resultBarTrack: { height: 14, background: "#e3ddd1", border: "2.5px solid #111", overflow: "hidden", marginBottom: 8 },
+  resultBarFill: { height: "100%", background: "#2a9d2a", transition: "width 0.6s" },
+  resultPct: { fontSize: 14, color: "#666", margin: "0 0 26px", fontStyle: "italic" },
+  bigBtn: {
+    fontFamily: "'Bebas Neue', sans-serif", fontSize: 18, letterSpacing: "0.08em",
+    padding: "13px 28px", border: "3px solid #111", background: "#111", color: "#fff", cursor: "pointer",
+  },
+
+  footer: { textAlign: "center", padding: "20px 24px", borderTop: "2px solid #ddd", fontSize: 11, color: "#aaa", fontStyle: "italic", letterSpacing: "0.05em" },
+};
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<FallacyApp />);
+  </script>
+</body>
+</html>
