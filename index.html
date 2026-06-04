@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Spot the Fallacy</title>
+
+  <!-- Add-to-Home-Screen (iOS) -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Fallacy" />
+  <meta name="theme-color" content="#E63946" />
+  <link rel="apple-touch-icon" href="data:image/png;base64,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" />
+  <link rel="icon" href="data:image/png;base64,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" />
+
+  <style>
+    html, body { margin: 0; padding: 0; background: #F5F0E8; }
+    * { -webkit-tap-highlight-color: transparent; }
+    #loading {
+      font-family: -apple-system, system-ui, sans-serif;
+      text-align: center; padding: 80px 20px; color: #888;
+    }
+  </style>
+
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"><div id="loading">Loading Spot the Fallacy…</div></div>
+
+  <script type="text/babel" data-presets="react">
+    const { useState, useEffect, useMemo, useCallback, memo } = React;
+
+const FONT_HREF =
+  "https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap";
+
+function useGoogleFonts() {
+  useEffect(() => {
+    if (document.querySelector(`link[href="${FONT_HREF}"]`)) return;
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = FONT_HREF;
+    document.head.appendChild(link);
+  }, []);
+}
+
+/* ─── DATA: the fallacy deck ─── */
+const FALLACIES = [
+  {
+    id: "strawman",
+    name: "Straw Man",
+    cat: "Distraction",
+    tagline: "Attacking an argument nobody made.",
+    what: "Misrepresenting someone's position to make it easier to knock down. You refute a distorted, exaggerated version of their argument instead of the real one.",
+    example: "“You want better train funding? So you think we should just pour endless money into trains and let every road in the country crumble.”",
+    why: "It feels like a win because the absurd version is easy to defeat — but the actual claim was never addressed. Audiences mistake the demolition of the fake argument for a rebuttal of the real one.",
+    spot: "Ask: 'Is that really what they said?' If the version being attacked sounds far more extreme or stupid than the original, you're looking at a straw man.",
+  },
+  {
+    id: "adhominem",
+    name: "Ad Hominem",
+    cat: "Distraction",
+    tagline: "Attacking the person, not the point.",
+    what: "Rejecting an argument by attacking the character, motive, or traits of the person making it, rather than engaging with the argument itself.",
+    example: "“Why should we listen to her ideas on tax policy? She's never even run a business.”",
+    why: "Personal flaws are emotionally vivid and easy to latch onto. But whether a claim is true doesn't depend on who says it — even unpleasant or unqualified people can be right.",
+    spot: "Check whether the response engages the claim or just the claimant. If you removed the insult, would any actual counterargument remain?",
+  },
+  {
+    id: "falsedilemma",
+    name: "False Dilemma",
+    cat: "Structure",
+    tagline: "Only two options — when there are more.",
+    what: "Presenting a situation as having only two possible outcomes when in fact other alternatives exist. Also called the either/or fallacy or black-and-white thinking.",
+    example: "“Either we ban the app entirely, or we accept that our kids' data will be stolen. There's no middle ground.”",
+    why: "It forces a choice by hiding the spectrum of real options. Cornered into picking between two extremes, people accept one without noticing the third, fourth, or fifth path.",
+    spot: "Ask: 'Are these really the only choices?' Look for the compromise, the hybrid, or the 'none of the above' the speaker conveniently omitted.",
+  },
+  {
+    id: "slipperyslope",
+    name: "Slippery Slope",
+    cat: "Structure",
+    tagline: "One step leads inevitably to disaster.",
+    what: "Asserting that a relatively small first step will unavoidably lead to a chain of related (usually catastrophic) events, without justifying why each link must follow.",
+    example: "“If we let students redo one test, soon they'll expect to redo everything, and eventually grades will mean nothing at all.”",
+    why: "The imagined endpoint is scary, and fear short-circuits scrutiny of the chain. But each 'inevitable' step usually needs its own evidence — and rarely gets it.",
+    spot: "Examine each link in the chain. Is every step actually guaranteed, or are 'could' and 'might' quietly doing the work of 'will'?",
+  },
+  {
+    id: "circular",
+    name: "Circular Reasoning",
+    cat: "Structure",
+    tagline: "The conclusion is the evidence.",
+    what: "An argument where the conclusion is assumed within one of its premises. The reasoning goes in a circle: A is true because of B, and B is true because of A. Also called begging the question.",
+    example: "“This book is the most trustworthy source on the subject — because it says so right here in the introduction.”",
+    why: "It can sound authoritative because it repeats itself confidently. But it never offers independent support; it just restates the claim in different words.",
+    spot: "Try to trace the support. If the reason for believing the conclusion turns out to BE the conclusion, the circle is closed and nothing was proven.",
+  },
+  {
+    id: "appealauthority",
+    name: "Appeal to Authority",
+    cat: "Relevance",
+    tagline: "True because someone important said so.",
+    what: "Claiming something must be true simply because an authority or celebrity endorses it — especially when that authority isn't an expert in the relevant field.",
+    example: "“A famous actor with millions of followers says this supplement cures colds, so it must work.”",
+    why: "We're wired to trust authority and status. But expertise doesn't transfer between fields, and even real experts can be wrong or biased. Endorsement isn't evidence.",
+    spot: "Ask two things: Is this person actually an expert in THIS topic? And is there real evidence behind the claim, or just the endorsement?",
+  },
+  {
+    id: "bandwagon",
+    name: "Bandwagon",
+    cat: "Relevance",
+    tagline: "True because everyone believes it.",
+    what: "Arguing that a claim is correct, or an action is right, simply because many people believe it or do it. Popularity is treated as proof. Also called appeal to popularity.",
+    example: "“Millions of people can't be wrong — if everyone's investing in this, it must be a smart move.”",
+    why: "Belonging feels safe, and going against the crowd feels risky. But popularity tracks what's appealing or trendy, not what's true. Whole crowds have been wrong before.",
+    spot: "Separate 'popular' from 'correct.' Ask whether there's any evidence beyond the number of believers. Fashions and facts are different things.",
+  },
+  {
+    id: "appealemotion",
+    name: "Appeal to Emotion",
+    cat: "Relevance",
+    tagline: "Feelings used in place of reasons.",
+    what: "Manipulating an emotional response — fear, pity, anger, pride — in place of presenting a valid argument. The feeling is meant to substitute for evidence.",
+    example: "“How could you possibly oppose this policy? Think of the children who would be heartbroken.”",
+    why: "Strong emotions hijack careful thought. When you feel fear or sympathy intensely, you're far less likely to ask whether the underlying claim actually holds up.",
+    spot: "Notice when a message works hard to make you FEEL something. Then ask: underneath the emotion, what's the actual argument — and does it stand on its own?",
+  },
+  {
+    id: "hastygeneralization",
+    name: "Hasty Generalization",
+    cat: "Evidence",
+    tagline: "A big conclusion from tiny evidence.",
+    what: "Drawing a broad conclusion from a sample that's too small, biased, or unrepresentative to support it.",
+    example: "“I met two rude people from that city, so everyone who lives there must be unfriendly.”",
+    why: "Our brains love patterns and form them fast, often from just one or two memorable cases. But a handful of examples rarely represents the whole.",
+    spot: "Ask: 'How much evidence is this really based on?' One anecdote or a tiny sample can't support a sweeping claim about an entire group.",
+  },
+  {
+    id: "posthoc",
+    name: "Post Hoc",
+    cat: "Evidence",
+    tagline: "It happened after, so it was caused by.",
+    what: "Assuming that because one event followed another, the first must have caused the second. Confuses correlation and sequence with causation. Full name: post hoc ergo propter hoc.",
+    example: "“I wore my lucky socks and we won the game — those socks clearly made the difference.”",
+    why: "Sequence in time looks like cause, and our minds crave explanations. But two things happening one after another can be coincidence, or both caused by some third factor.",
+    spot: "Ask: 'Is there an actual mechanism here, or just timing?' Could it be coincidence, or could something else explain both events?",
+  },
+  {
+    id: "redherring",
+    name: "Red Herring",
+    cat: "Distraction",
+    tagline: "Changing the subject to dodge it.",
+    what: "Introducing an irrelevant topic to divert attention away from the original issue, so the real question is never actually answered.",
+    example: "“You're asking about my missed deadlines? Well, what about how the whole industry is struggling right now?”",
+    why: "The new topic is often interesting or provocative enough to pull focus. By the time everyone's debating it, the original uncomfortable question has quietly vanished.",
+    spot: "Keep the original question in view. Ask: 'Does this response actually address what was asked, or did we just get steered somewhere else?'",
+  },
+  {
+    id: "tuquoque",
+    name: "Tu Quoque",
+    cat: "Distraction",
+    tagline: "“You do it too!” as a defense.",
+    what: "Deflecting criticism by accusing the critic of hypocrisy, rather than addressing the criticism itself. A specific form of ad hominem. Literally 'you also.'",
+    example: "“You're telling me to quit smoking? I've seen you light up plenty of times yourself.”",
+    why: "Pointing out hypocrisy feels like a fair counterstrike. But the critic's behavior has no bearing on whether their point is correct — a hypocrite can still be right.",
+    spot: "Separate the messenger from the message. Even if the critic IS a hypocrite, ask whether the original criticism is still valid on its own merits.",
+  },
+];
+
+const CATEGORIES = ["All", "Distraction", "Structure", "Relevance", "Evidence"];
+
+const catAccent = {
+  Distraction: "#E63946",
+  Structure: "#4361EE",
+  Relevance: "#F4A300",
+  Evidence: "#2EC4B6",
+};
+const catEmoji = {
+  Distraction: "🎭",
+  Structure: "🏗️",
+  Relevance: "🎯",
+  Evidence: "🔬",
+};
+
+/* ─── QUIZ: scenarios → which fallacy? ─── */
+const QUIZ = [
+  {
+    scenario: "“Of course the new mayor's housing plan is garbage. Have you seen the ridiculous way he dresses?”",
+    answer: "adhominem",
+    note: "His clothing has nothing to do with whether the housing plan works. The attack targets the person, not the policy.",
+  },
+  {
+    scenario: "“We either cancel the entire festival or we accept that someone is going to get hurt. Pick one.”",
+    answer: "falsedilemma",
+    note: "Extra security, capacity limits, and safety measures are all options being hidden behind a forced two-way choice.",
+  },
+  {
+    scenario: "“Four out of five of my friends loved that movie, so it's obviously a cinematic masterpiece for everyone.”",
+    answer: "hastygeneralization",
+    note: "Five friends is far too small and unrepresentative a sample to support a claim about a film's universal quality.",
+  },
+  {
+    scenario: "“Right after the new coach arrived, the team started winning. He's clearly the reason for the turnaround.”",
+    answer: "posthoc",
+    note: "The wins came after the coach — but timing isn't proof of cause. New players, easier opponents, or luck could explain it.",
+  },
+  {
+    scenario: "“You can trust everything on this website. How do we know? Because it's listed as a reliable site — on the website itself.”",
+    answer: "circular",
+    note: "The conclusion (it's trustworthy) is used as its own evidence. The reasoning loops back on itself.",
+  },
+  {
+    scenario: "“If we allow one food truck downtown, before long there'll be hundreds and no real restaurants will survive at all.”",
+    answer: "slipperyslope",
+    note: "Each step from 'one truck' to 'restaurant apocalypse' is asserted as inevitable without any justification.",
+  },
+  {
+    scenario: "“My opponent wants to review the defense budget — in other words, he wants to leave us totally defenseless against our enemies.”",
+    answer: "strawman",
+    note: "'Review the budget' has been twisted into 'abolish all defense' — a distorted version that's easier to attack.",
+  },
+  {
+    scenario: "“A world-famous physicist endorsed this brand of vitamins, so they're guaranteed to keep you healthy.”",
+    answer: "appealauthority",
+    note: "Physics expertise doesn't transfer to nutrition, and an endorsement isn't the same as evidence the vitamins work.",
+  },
+  {
+    scenario: "“You criticize me for being late, but you were ten minutes late to this very meeting!”",
+    answer: "tuquoque",
+    note: "Pointing out the critic's own lateness doesn't address whether the original criticism was fair.",
+  },
+  {
+    scenario: "“Reporter: Did the company dump waste in the river? Spokesperson: What we should really be talking about is how many jobs we create.”",
+    answer: "redherring",
+    note: "Jobs are a separate topic introduced to steer attention away from the actual question about pollution.",
+  },
+];
+
+/* Built once: id → fallacy object, and a reusable [0,1,2,…] index array. */
+const FALLACY_BY_ID = Object.fromEntries(FALLACIES.map((f) => [f.id, f]));
+const QUIZ_INDICES = QUIZ.map((_, i) => i);
+
+function FallacyApp() {
+  useGoogleFonts();
+  const [mode, setMode] = useState("learn"); // 'learn' | 'quiz'
+
+  return (
+    <div style={s.root}>
+      <Header mode={mode} setMode={setMode} />
+      {mode === "learn" ? <LearnMode /> : <QuizMode />}
+      <footer style={s.footer}>
+        {FALLACIES.length} fallacies · Learn to spot them, then test yourself
+      </footer>
+    </div>
+  );
+}
+
+function Header({ mode, setMode }) {
+  return (
+    <header style={s.header}>
+      <div style={s.headerInner}>
+        <div>
+          <div style={s.titleTag}>CRITICAL THINKING TOOLKIT</div>
+          <h1 style={s.title}>SPOT THE<br />FALLACY</h1>
+          <p style={s.subtitle}>Learn the tricks bad arguments play — and catch them in the wild</p>
+        </div>
+        <div style={s.modeSwitch}>
+          <button
+            style={{ ...s.modeBtn, ...(mode === "learn" ? s.modeBtnActive : {}) }}
+            onClick={() => setMode("learn")}
+          >
+            📖 LEARN
+          </button>
+          <button
+            style={{ ...s.modeBtn, ...(mode === "quiz" ? s.modeBtnActiveRed : {}) }}
+            onClick={() => setMode("quiz")}
+          >
+            🎯 QUIZ
+          </button>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+/* ─── LEARN MODE ─── */
+function LearnMode() {
+  const [cat, setCat] = useState("All");
+  const [search, setSearch] = useState("");
+  const [openId, setOpenId] = useState(null);
+
+  const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return FALLACIES.filter((f) => {
+      if (cat !== "All" && f.cat !== cat) return false;
+      if (!q) return true;
+      return (
+        f.name.toLowerCase().includes(q) ||
+        f.tagline.toLowerCase().includes(q) ||
+        f.what.toLowerCase().includes(q)
+      );
+    });
+  }, [cat, search]);
+
+  const toggle = useCallback(
+    (id) => setOpenId((p) => (p === id ? null : id)),
+    []
+  );
+
+  return (
+    <>
+      <div style={s.controls}>
+        <div style={s.searchWrap}>
+          <span style={{ padding: "0 10px", fontSize: 15 }}>🔍</span>
+          <input
+            style={s.searchInput}
+            placeholder="Search fallacies…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          {search && <button style={s.clearBtn} onClick={() => setSearch("")}>✕</button>}
+        </div>
+        <div style={s.filterWrap}>
+          {CATEGORIES.map((c) => {
+            const active = cat === c;
+            const accent = c === "All" ? "#111" : catAccent[c];
+            return (
+              <button
+                key={c}
+                style={{ ...s.filterBtn, ...(active ? { background: accent, color: "#fff" } : {}) }}
+                onClick={() => setCat(c)}
+              >
+                {c !== "All" && catEmoji[c] + " "}
+                {c.toUpperCase()}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <main style={s.list}>
+        {filtered.length === 0 && (
+          <div style={s.empty}>
+            <div style={{ fontSize: 44, marginBottom: 10 }}>🔎</div>
+            <div style={s.emptyText}>No fallacies match.</div>
+          </div>
+        )}
+        {filtered.map((f) => (
+          <FallacyCard key={f.id} f={f} isOpen={openId === f.id} onToggle={toggle} />
+        ))}
+      </main>
+    </>
+  );
+}
+
+const FallacyCard = memo(function FallacyCard({ f, isOpen, onToggle }) {
+  const accent = catAccent[f.cat];
+  return (
+    <div style={{ ...s.card, ...(isOpen ? { boxShadow: "4px 4px 0 #111", borderTopColor: accent, borderTopWidth: 5 } : {}) }}>
+      <button style={s.cardHeader} onClick={() => onToggle(f.id)} aria-expanded={isOpen}>
+        <div style={s.cardHeaderLeft}>
+          <span style={{ ...s.pill, background: accent }}>{catEmoji[f.cat]} {f.cat.toUpperCase()}</span>
+          <div style={s.nameBlock}>
+            <span style={s.cardName}>{f.name}</span>
+            <span style={s.cardTagline}>{f.tagline}</span>
+          </div>
+        </div>
+        <span style={{ ...s.chev, transform: isOpen ? "rotate(45deg)" : "none" }}>+</span>
+      </button>
+
+      {isOpen && (
+        <div style={s.body}>
+          <Section label="WHAT IT IS" accent={accent}>{f.what}</Section>
+          <div style={{ ...s.exampleBox, borderColor: accent }}>
+            <div style={{ ...s.exampleLabel, color: accent }}>💬 IN THE WILD</div>
+            <p style={s.exampleText}>{f.example}</p>
+          </div>
+          <Section label="WHY IT FOOLS US" accent={accent}>{f.why}</Section>
+          <div style={s.spotBox}>
+            <div style={s.spotLabel}>🔍 HOW TO SPOT IT</div>
+            <p style={s.spotText}>{f.spot}</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+});
+
+function Section({ label, accent, children }) {
+  return (
+    <div style={s.section}>
+      <div style={{ ...s.sectionLabel, color: accent }}>{label}</div>
+      <p style={s.sectionText}>{children}</p>
+    </div>
+  );
+}
+
+/* ─── QUIZ MODE ─── */
+function QuizMode() {
+  const [order, setOrder] = useState(() => shuffle(QUIZ_INDICES));
+  const [idx, setIdx] = useState(0);
+  const [picked, setPicked] = useState(null);
+  const [score, setScore] = useState(0);
+  const [done, setDone] = useState(false);
+
+  const questionIndex = order[idx];
+  const q = QUIZ[questionIndex];
+
+  // four options: the correct fallacy + three distractors, shuffled.
+  // Keyed on the question's identity (not its answer) so repeats and
+  // reshuffles always recompute correctly.
+  const options = useMemo(() => {
+    const correct = q.answer;
+    const others = shuffle(
+      FALLACIES.filter((f) => f.id !== correct).map((f) => f.id)
+    ).slice(0, 3);
+    return shuffle([correct, ...others]);
+  }, [questionIndex]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const pick = (id) => {
+    if (picked) return;
+    setPicked(id);
+    if (id === q.answer) setScore((sc) => sc + 1);
+  };
+
+  const next = () => {
+    if (idx + 1 >= order.length) { setDone(true); return; }
+    setIdx((i) => i + 1);
+    setPicked(null);
+  };
+
+  const restart = () => {
+    setOrder(shuffle(QUIZ_INDICES));
+    setIdx(0); setPicked(null); setScore(0); setDone(false);
+  };
+
+  if (done) {
+    const pct = Math.round((score / QUIZ.length) * 100);
+    const verdict =
+      pct >= 90 ? "FALLACY HUNTER" :
+      pct >= 70 ? "SHARP EYE" :
+      pct >= 50 ? "GETTING THERE" : "KEEP TRAINING";
+    return (
+      <div style={s.resultWrap}>
+        <div style={s.resultCard}>
+          <div style={s.resultLabel}>QUIZ COMPLETE</div>
+          <div style={s.resultScore}>{score}<span style={s.resultTotal}>/{QUIZ.length}</span></div>
+          <div style={s.resultVerdict}>{verdict}</div>
+          <div style={s.resultBarTrack}>
+            <div style={{ ...s.resultBarFill, width: `${pct}%` }} />
+          </div>
+          <p style={s.resultPct}>{pct}% correct</p>
+          <button style={s.bigBtn} onClick={restart}>↻ PLAY AGAIN</button>
+        </div>
+      </div>
+    );
+  }
+
+  const fallacyById = (id) => FALLACY_BY_ID[id];
+  const isCorrect = picked === q.answer;
+
+  return (
+    <div style={s.quizWrap}>
+      {/* progress + score */}
+      <div style={s.quizTop}>
+        <span style={s.quizCount}>QUESTION {idx + 1} / {QUIZ.length}</span>
+        <span style={s.quizScore}>SCORE: {score}</span>
+      </div>
+      <div style={s.quizTrack}>
+        <div style={{ ...s.quizTrackFill, width: `${(idx / QUIZ.length) * 100}%` }} />
+      </div>
+
+      {/* scenario */}
+      <div style={s.scenarioBox}>
+        <div style={s.scenarioLabel}>⚠️ WHICH FALLACY IS THIS?</div>
+        <p style={s.scenarioText}>{q.scenario}</p>
+      </div>
+
+      {/* options */}
+      <div style={s.optionGrid}>
+        {options.map((id) => {
+          const f = fallacyById(id);
+          let style = { ...s.optBtn };
+          if (picked) {
+            if (id === q.answer) style = { ...style, ...s.optCorrect };
+            else if (id === picked) style = { ...style, ...s.optWrong };
+            else style = { ...style, ...s.optDimmed };
+          }
+          return (
+            <button key={id} style={style} onClick={() => pick(id)} disabled={!!picked}>
+              <span style={s.optName}>{f.name}</span>
+              {picked && id === q.answer && <span style={s.optMark}>✓</span>}
+              {picked && id === picked && id !== q.answer && <span style={s.optMark}>✕</span>}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* feedback */}
+      {picked && (
+        <div style={{ ...s.feedback, borderColor: isCorrect ? "#2a9d2a" : "#E63946" }}>
+          <div style={{ ...s.feedbackTitle, color: isCorrect ? "#2a9d2a" : "#E63946" }}>
+            {isCorrect ? "✓ CORRECT!" : `✕ IT'S ${fallacyById(q.answer).name.toUpperCase()}`}
+          </div>
+          <p style={s.feedbackText}>{q.note}</p>
+          <button style={s.nextBtn} onClick={next}>
+            {idx + 1 >= order.length ? "SEE RESULTS →" : "NEXT QUESTION →"}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ─── STYLES ─── */
+const s = {
+  root: {
+    fontFamily: "'Source Serif 4', Georgia, serif",
+    background: "#F5F0E8",
+    minHeight: "100vh",
+    color: "#111",
+  },
+
+  header: { background: "#fff", borderBottom: "3px solid #111" },
+  headerInner: {
+    maxWidth: 880, margin: "0 auto", padding: "26px 24px 22px",
+    display: "flex", alignItems: "flex-end", justifyContent: "space-between", gap: 16, flexWrap: "wrap",
+  },
+  titleTag: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 11, letterSpacing: "0.2em", color: "#999" },
+  title: {
+    fontFamily: "'Bebas Neue', Impact, sans-serif",
+    fontSize: "clamp(38px, 8vw, 60px)", lineHeight: 0.92, letterSpacing: "0.03em",
+    margin: "3px 0 8px", color: "#111",
+  },
+  subtitle: { fontSize: 13, color: "#555", margin: 0, maxWidth: 420 },
+  modeSwitch: { display: "flex", gap: 0, border: "3px solid #111", flexShrink: 0 },
+  modeBtn: {
+    fontFamily: "'Bebas Neue', sans-serif", fontSize: 16, letterSpacing: "0.08em",
+    padding: "10px 18px", border: "none", background: "#fff", color: "#111", cursor: "pointer",
+    transition: "all 0.12s",
+  },
+  modeBtnActive: { background: "#4361EE", color: "#fff" },
+  modeBtnActiveRed: { background: "#E63946", color: "#fff" },
+
+  controls: { background: "#fff", borderBottom: "3px solid #111", padding: "16px 24px", position: "sticky", top: 0, zIndex: 20 },
+  searchWrap: { display: "flex", alignItems: "center", border: "2.5px solid #111", background: "#fff", marginBottom: 12, maxWidth: 880, margin: "0 auto 12px" },
+  searchInput: { flex: 1, border: "none", outline: "none", padding: "10px 0", fontSize: 15, fontFamily: "'Source Serif 4', Georgia, serif", background: "transparent", color: "#111", minWidth: 0 },
+  clearBtn: { border: "none", background: "none", padding: "0 14px", cursor: "pointer", fontSize: 14, color: "#888" },
+  filterWrap: { display: "flex", flexWrap: "wrap", gap: 6, maxWidth: 880, margin: "0 auto" },
+  filterBtn: {
+    fontFamily: "'Bebas Neue', sans-serif", fontSize: 13, letterSpacing: "0.07em",
+    padding: "5px 12px", border: "2px solid #111", background: "#fff", color: "#111", cursor: "pointer", transition: "all 0.12s",
+  },
+
+  list: { maxWidth: 880, margin: "0 auto", padding: "20px 24px 50px", display: "flex", flexDirection: "column", gap: 10 },
+  card: { background: "#fff", border: "2.5px solid #111", borderTop: "5px solid #111", transition: "box-shadow 0.15s" },
+  cardHeader: { width: "100%", background: "transparent", border: "none", padding: "14px 16px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, cursor: "pointer", textAlign: "left", fontFamily: "inherit" },
+  cardHeaderLeft: { display: "flex", alignItems: "center", gap: 12, flex: 1, minWidth: 0, flexWrap: "wrap" },
+  pill: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 10, letterSpacing: "0.08em", padding: "3px 8px", color: "#fff", whiteSpace: "nowrap", flexShrink: 0 },
+  nameBlock: { display: "flex", flexDirection: "column", gap: 1, minWidth: 0 },
+  cardName: { fontFamily: "'Bebas Neue', Impact, sans-serif", fontSize: "clamp(18px, 3vw, 24px)", letterSpacing: "0.03em", color: "#111", lineHeight: 1 },
+  cardTagline: { fontSize: 12.5, color: "#777", fontStyle: "italic" },
+  chev: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 26, color: "#111", transition: "transform 0.2s", lineHeight: 1, flexShrink: 0 },
+
+  body: { borderTop: "2px solid #111", padding: "16px 18px 18px" },
+  section: { marginBottom: 14 },
+  sectionLabel: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 12, letterSpacing: "0.14em", marginBottom: 5 },
+  sectionText: { fontSize: 14, lineHeight: 1.75, color: "#222", margin: 0 },
+
+  exampleBox: { border: "2.5px solid #111", borderLeftWidth: 6, padding: "12px 14px", margin: "0 0 14px", background: "#FBF8F2" },
+  exampleLabel: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 11, letterSpacing: "0.12em", marginBottom: 6 },
+  exampleText: { fontSize: 14.5, lineHeight: 1.6, color: "#1a1a1a", margin: 0, fontStyle: "italic" },
+
+  spotBox: { background: "#111", padding: "13px 15px", marginTop: 4 },
+  spotLabel: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 11, letterSpacing: "0.14em", color: "#F4A300", marginBottom: 6 },
+  spotText: { fontSize: 14, lineHeight: 1.7, color: "#fff", margin: 0 },
+
+  empty: { textAlign: "center", padding: "70px 20px", color: "#888" },
+  emptyText: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 22, letterSpacing: "0.08em", color: "#444" },
+
+  /* quiz */
+  quizWrap: { maxWidth: 720, margin: "0 auto", padding: "26px 24px 50px" },
+  quizTop: { display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 8 },
+  quizCount: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 15, letterSpacing: "0.1em", color: "#555" },
+  quizScore: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 16, letterSpacing: "0.08em", color: "#E63946" },
+  quizTrack: { height: 8, background: "#e3ddd1", border: "2px solid #111", marginBottom: 22, overflow: "hidden" },
+  quizTrackFill: { height: "100%", background: "#E63946", transition: "width 0.4s" },
+
+  scenarioBox: { background: "#fff", border: "3px solid #111", boxShadow: "5px 5px 0 #111", padding: "20px 22px", marginBottom: 22 },
+  scenarioLabel: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 13, letterSpacing: "0.12em", color: "#E63946", marginBottom: 10 },
+  scenarioText: { fontSize: 18, lineHeight: 1.6, color: "#111", margin: 0, fontStyle: "italic" },
+
+  optionGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 18 },
+  optBtn: {
+    fontFamily: "'Bebas Neue', sans-serif", fontSize: 17, letterSpacing: "0.04em",
+    padding: "16px 14px", border: "2.5px solid #111", background: "#fff", color: "#111", cursor: "pointer",
+    display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8,
+    transition: "all 0.12s", textAlign: "left",
+  },
+  optCorrect: { background: "#2a9d2a", color: "#fff", boxShadow: "3px 3px 0 #111" },
+  optWrong: { background: "#E63946", color: "#fff" },
+  optDimmed: { opacity: 0.4 },
+  optName: { lineHeight: 1.1 },
+  optMark: { fontSize: 20, flexShrink: 0 },
+
+  feedback: { background: "#fff", border: "3px solid #111", borderLeftWidth: 7, padding: "16px 18px" },
+  feedbackTitle: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 20, letterSpacing: "0.06em", marginBottom: 8 },
+  feedbackText: { fontSize: 14.5, lineHeight: 1.7, color: "#222", margin: "0 0 14px" },
+  nextBtn: {
+    fontFamily: "'Bebas Neue', sans-serif", fontSize: 15, letterSpacing: "0.08em",
+    padding: "10px 20px", border: "2.5px solid #111", background: "#111", color: "#fff", cursor: "pointer",
+  },
+
+  /* results */
+  resultWrap: { maxWidth: 520, margin: "0 auto", padding: "50px 24px" },
+  resultCard: { background: "#fff", border: "3px solid #111", boxShadow: "8px 8px 0 #111", padding: "40px 32px", textAlign: "center" },
+  resultLabel: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 15, letterSpacing: "0.16em", color: "#999", marginBottom: 14 },
+  resultScore: { fontFamily: "'Bebas Neue', Impact, sans-serif", fontSize: 80, lineHeight: 1, color: "#111" },
+  resultTotal: { fontSize: 40, color: "#bbb" },
+  resultVerdict: { fontFamily: "'Bebas Neue', sans-serif", fontSize: 30, letterSpacing: "0.06em", color: "#E63946", margin: "10px 0 22px" },
+  resultBarTrack: { height: 14, background: "#e3ddd1", border: "2.5px solid #111", overflow: "hidden", marginBottom: 8 },
+  resultBarFill: { height: "100%", background: "#2a9d2a", transition: "width 0.6s" },
+  resultPct: { fontSize: 14, color: "#666", margin: "0 0 26px", fontStyle: "italic" },
+  bigBtn: {
+    fontFamily: "'Bebas Neue', sans-serif", fontSize: 18, letterSpacing: "0.08em",
+    padding: "13px 28px", border: "3px solid #111", background: "#111", color: "#fff", cursor: "pointer",
+  },
+
+  footer: { textAlign: "center", padding: "20px 24px", borderTop: "2px solid #ddd", fontSize: 11, color: "#aaa", fontStyle: "italic", letterSpacing: "0.05em" },
+};
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<FallacyApp />);
+  </script>
+</body>
+</html>
